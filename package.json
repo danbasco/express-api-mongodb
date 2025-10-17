@@ -1,11 +1,11 @@
 {
   "name": "express-api-mongodb",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start:app": "nodemon src/index.js",
+    "start:app": "node --loader ts-node/esm src/index.ts",
     "start:database": "docker compose up -d",
     "build": "echo 'Nothing to build'"
   },
@@ -16,6 +16,11 @@
     "mongoose": "^8.19.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@types/express": "^5.0.3",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^24.8.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
