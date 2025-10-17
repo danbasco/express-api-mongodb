@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start:app": "nodemon src/index.js",
-    "start:database": "docker compose up -d"
+    "start:database": "docker compose up -d",
+    "build": "echo 'Nothing to build'"
   },
   "author": "Daniel Vasconcelos",
   "dependencies": {
