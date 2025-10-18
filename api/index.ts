@@ -1,7 +1,7 @@
 import express, {Request, Response} from "express";
 import dotenv from "dotenv";
-import database from "./database/configdb";
-import User from "./models/User.model"
+import database from "./database/configdb.js";
+import User from "./models/User.model.js"
 
 dotenv.config();
 
