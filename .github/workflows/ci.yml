@@ -1,20 +1,23 @@
 name: CI with Vercel
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
-        run: npm run build
+        run: npx tsc --project tsconfig.build.json
 
       - name: Deploy to Vercel
         env:
@@ -25,6 +28,9 @@ jobs:
           MONGODB_DB_NAME: ${{ secrets.MONGODB_DB_NAME }}
         run: |
           npm install -g vercel
-          vercel deploy --prod --yes \
+          vercel deploy dist --prod --yes --confirm \
             --token=$VERCEL_TOKEN \
-            --env MONGODB_URI=$MONGODB_URI
+            --env MONGODB_URI=$MONGODB_URI \
+            --env MONGODB_DB_NAME=$MONGODB_DB_NAME \
+            --org $VERCEL_ORG_ID \
+            --project $VERCEL_PROJECT_ID
