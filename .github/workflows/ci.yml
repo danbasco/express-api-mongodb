@@ -30,6 +30,6 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           MONGODB_DB_NAME: ${{ secrets.MONGODB_DB_NAME }}
         run: |
-          vercel --prod --yes --confirm \
+          vercel --prod --yes \
             --env MONGODB_URI=$MONGODB_URI \
             --env MONGODB_DB_NAME=$MONGODB_DB_NAME
