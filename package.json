@@ -1,12 +1,12 @@
 {
   "name": "express-api-mongodb",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "",
-  "main": "dist/api/index.js",
+  "main": "api/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsx watch api/index.ts",
-    "start:app": "node dist/api/index.js",
+    "start": "node api/index.ts",
     "start:database": "docker compose up -d",
     "build": "tsc -p tsconfig.build.json"
   },
