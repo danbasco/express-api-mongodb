@@ -1,7 +1,7 @@
 import express, {Request, Response} from "express";
 import dotenv from "dotenv";
 import database from "./database/configdb.js";
-import User from "./models/User.model.js"
+import userRoute from "./routes/user.route.js";
 
 dotenv.config();
 
@@ -9,6 +9,8 @@ const app = express();
 database.connect();
 
 app.use(express.json());
+
+app.use("/users", userRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send({ message: "Hello World! Welcome to L-I-F-E!" });
