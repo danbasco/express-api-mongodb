@@ -1,2 +1,0 @@
-curl --request GET http://localhost:3000/protected \
-  --header "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjQzODYyM2M0MTg0NzZiM2M1NjFkYSIsImlhdCI6MTc2MDgzNzM3OSwiZXhwIjoxNzYwOTIzNzc5fQ.U5aPylTF8e0WC9avKukmOSEklgVOigUixtIg76jxNJA" 
