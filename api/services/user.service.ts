@@ -10,7 +10,6 @@ interface ResponseType {
     data?: any;
 }
 
-
 const createJWT = (uid: Types.ObjectId | string) => {
     const id = typeof uid === "string" ? uid : uid.toString();
     return jwt.sign({ id }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
@@ -20,8 +19,16 @@ const locateUserByEmail = async (email: string) => {
     return await User.findOne({ email }).select('+password');
 };
 
-// (removed locateUserByIdentifier) keep email-only lookup
+const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
 
+const isValidPassword = (password: string): boolean => {
+    // At least 8 characters, one uppercase, one lowercase, one number and one special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+}
 
 export const registerService = async (data: IUser): Promise<ResponseType> => {
 
@@ -31,12 +38,25 @@ export const registerService = async (data: IUser): Promise<ResponseType> => {
             return { status: 400, message: "Name, email, and password are required." };
         }
 
-
+        // Validação email existente
         const existingUser = await locateUserByEmail(data.email);
         if (existingUser) {
             return { status: 409, message: "Email already exists." };
         }
         
+        const validEmail = isValidEmail(data.email);
+        if (!validEmail) {
+            return { status: 400, message: "Invalid email format." };
+        }
+
+        const validPassword = isValidPassword(data.password);
+        if (!validPassword) {
+            return { status: 400, message: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character." };
+        }
+
+        // Hashing password
+
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(data.password, salt);
 
