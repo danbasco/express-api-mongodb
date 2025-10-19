@@ -1,0 +1,266 @@
+info:
+  name: MongoDB-Express API
+  schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+variable:
+  - key: baseUrl
+    value: 
+  - key: token
+    value: ''
+item:
+  - name: Cadastro
+    item:
+      - name: Cadastro Bem Sucedido
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "name": "daniel123",
+                "email": "daniel123@email.com",
+                "password": "Daniel123_"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
+      - name: Erro: Senha Invalida
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "name": "daniel123",
+                "email": "daniel123@email.com",
+                "password": "123"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
+      - name: Erro: Email repetido
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "name": "daniel123",
+                "email": "existing@example.com",
+                "password": "Daniel123_"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
+      - name: Erro: Email invalido
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "name": "daniel123",
+                "email": "not-an-email",
+                "password": "Daniel123_"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
+      - name: Erro: Requisição mal formatada
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "email": "missingname@example.com"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
+
+  - name: Login
+    item:
+      - name: Login Bem Sucedido
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "email": "daniel123@email.com",
+                "password": "Daniel123_"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
+      - name: Erro: Senha invalida
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "email": "daniel123@email.com",
+                "password": "wrongpassword"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
+      - name: Erro: Email Invalido
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "email": "not-an-email",
+                "password": "somepassword"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
+      - name: Erro: Requisição mal formatada
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+          body:
+            mode: raw
+            raw: |
+              {
+                "password": "noemailprovided"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
+
+  - name: Protected
+    item:
+      - name: Rota Protected Conectada
+        request:
+          method: GET
+          header:
+            - key: Authorization
+              value: "Bearer {{token}}"
+            - key: Accept
+              value: application/json
+          url:
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
+      - name: Acesso Sem Token
+        request:
+          method: GET
+          header:
+            - key: Accept
+              value: application/json
+          url:
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
+      - name: Token Invalido
+        request:
+          method: GET
+          header:
+            - key: Authorization
+              value: "Bearer invalid.token.here"
+            - key: Accept
+              value: application/json
+          url:
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
