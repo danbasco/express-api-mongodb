@@ -1,20 +1,26 @@
 import mongoose, { Schema, model, Model } from 'mongoose';
 
 export interface IUser {
-    username: string;
+    name: string;
     password: string;
+    email: string;
 }
 
 const UserSchema: Schema<IUser> = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
-        unique: true,
+        
     },
     password: {
         type: String,
         required: true,
         select: false, // do not return password field by default
+    }, 
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     }
 });
 
