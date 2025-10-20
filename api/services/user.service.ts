@@ -26,9 +26,39 @@ const isValidEmail = (email: string): boolean => {
 
 const isValidPassword = (password: string): boolean => {
     // At least 8 characters, one uppercase, one lowercase, one number and one special character
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&_.]{8,}$/;
     return passwordRegex.test(password);
 }
+
+const validatePassword = (password: string): { valid: boolean; message?: string } => {
+    // 1) spaces
+    if (/\s/.test(password)) {
+        return { valid: false, message: "Password must not contain spaces." };
+    }
+
+    // 2) accented or non-ASCII characters
+    if (/[^\x00-\x7F]/.test(password)) {
+        return { valid: false, message: "Password must not contain accented or non-ASCII characters." };
+    }
+
+    // 3) characters not allowed (only A-Za-z0-9 and @$!%*?&_. allowed)
+    const allowedRegex = /^[A-Za-z\d@$!%*?&_.]+$/;
+    if (!allowedRegex.test(password)) {
+        return { valid: false, message: "Password contains invalid characters. Allowed: letters, numbers, and @ $ ! % * ? & _ ." };
+    }
+
+    // 4) length
+    if (password.length < 8) {
+        return { valid: false, message: "Password must be at least 8 characters long." };
+    }
+
+    // 5) composition requirements
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password) || !/[@$!%*?&_.]/.test(password)) {
+        return { valid: false, message: "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character (@ $ ! % * ? & _ .)." };
+    }
+
+    return { valid: true };
+};
 
 export const registerService = async (data: IUser): Promise<ResponseType> => {
 
@@ -49,9 +79,9 @@ export const registerService = async (data: IUser): Promise<ResponseType> => {
             return { status: 400, message: "Invalid email format." };
         }
 
-        const validPassword = isValidPassword(data.password);
-        if (!validPassword) {
-            return { status: 400, message: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character." };
+        const validPassword = validatePassword(data.password);
+        if (!validPassword.valid) {
+            return { status: 400, message: validPassword.message || "Invalid password." };
         }
 
         // Hashing password
