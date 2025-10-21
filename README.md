@@ -20,7 +20,7 @@ Before starting, make sure you have installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/express-api-mongodb.git
+   git clone https://github.com/danbasco/express-api-mongodb.git
    cd express-api-mongodb
    ```
 
