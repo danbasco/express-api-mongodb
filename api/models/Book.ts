@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model, model, Types } from "mongoose";
-import { GENRES, Genre } from "../types/genres.type";
+import { GENRES, Genre } from "../types/genres.type.js";
 
 
 export interface IBook {
