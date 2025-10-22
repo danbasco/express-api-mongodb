@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import Book, { IBook } from "../models/Book";
+import Book, { IBook } from "../models/Book.js";
 
-import ResponseType from "../types/response.type";
+import ResponseType from "../types/response.type.js";
 
 
 const locateBook = async(id: string = "") : Promise<IBook | null | IBook[]> => {
