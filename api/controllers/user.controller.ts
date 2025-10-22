@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { registerService, loginService } from "../services/user.service.js";
-import User, { IUser } from "../models/User.js";
+import { IUser } from "../models/User.js";
 
 
 export const registerController = async (req: Request<any, any, IUser>, res: Response) => {

@@ -2,13 +2,8 @@ import User, { IUser } from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
+import ResponseType from "../types/response.type.js";
 
-
-interface ResponseType {
-    status: number;
-    message: string;
-    data?: any;
-}
 
 const createJWT = (uid: Types.ObjectId | string) => {
     const id = typeof uid === "string" ? uid : uid.toString();
@@ -22,12 +17,6 @@ const locateUserByEmail = async (email: string) => {
 const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-}
-
-const isValidPassword = (password: string): boolean => {
-    // At least 8 characters, one uppercase, one lowercase, one number and one special character
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&_.]{8,}$/;
-    return passwordRegex.test(password);
 }
 
 const validatePassword = (password: string): { valid: boolean; message?: string } => {
