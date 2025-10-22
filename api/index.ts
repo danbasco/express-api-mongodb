@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import database from "./database/configdb.js";
 import userRoute from "./routes/user.route.js";
 import protectedRoute from "./routes/protected.route.js";
+import bookRoute from "./routes/book.route.js";
 
 dotenv.config();
 
@@ -11,8 +12,9 @@ database.connect();
 
 app.use(express.json());
 
-app.use("/users", userRoute);
+app.use("/auth", userRoute); // Authentication
 app.use("/protected", protectedRoute);
+app.use("/books", bookRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send({ message: "Hello World! Welcome to L-I-F-E!" });
