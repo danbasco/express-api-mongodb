@@ -5,7 +5,10 @@ declare global {
   namespace Express {
     interface Request {
       // decoded JWT payload or string id
-      user?: string | JwtPayload | { id?: string };
+      user?: {
+        id: string;
+        [key: string]: any;
+      } | JwtPayload;
     }
   }
 }

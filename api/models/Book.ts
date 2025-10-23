@@ -6,7 +6,8 @@ export interface IBook {
     "title": string,
     "author": string,
     "description": string,
-    "genre": string[]
+    "genre": string[],
+    "userId": Types.ObjectId
 }
 
 const BookSchema : Schema<IBook> = new Schema({
@@ -29,6 +30,11 @@ const BookSchema : Schema<IBook> = new Schema({
         type: [String],
         enum: GENRES,
         required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User"
     }
 
 })
