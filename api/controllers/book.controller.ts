@@ -11,7 +11,8 @@ export const createBook = async(req: Request<any, any, IBook> , res: Response) =
 
 export const listBooks = async(req: Request , res: Response) => {
 
-    const books = await bookService.listBooksService();
+    const books = await bookService.listBooksService({ ...req.query });
+    return res.status(books.status).json({ message: books.message, data: books.data });
 
 }
 
