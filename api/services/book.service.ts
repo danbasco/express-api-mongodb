@@ -4,25 +4,14 @@ import Book, { IBook } from "../models/Book.js";
 import ResponseType from "../types/response.type.js";
 
 
-const locateBook = async(id: string = "") : Promise<IBook | null | IBook[]> => {
-    try {
-
-        if (!id) {
-            const books = await Book.find();
-            return books;
-        }
-        if (!Types.ObjectId.isValid(id)) {
-            return null;
-        }
-
+const locateBook = async(id?: string, filters: any = {}) : Promise<IBook[]> => {
+    
+    if (id) {
         const book = await Book.findById(id);
-        return book;
-
-    } catch (error: any) {
-
-        console.error("locateBookById error:", error);
-        return null;
+        return book ? [book] : [];
     }
+    return await Book.find(filters);
+
 }
 
 export const createBookService = async (data: IBook) : Promise<ResponseType> => {
@@ -57,13 +46,14 @@ export const createBookService = async (data: IBook) : Promise<ResponseType> => 
     }
 }
 
-export const listBooksService = async() : Promise<ResponseType> => {
+export const listBooksService = async(req: any) : Promise<ResponseType> => {
     
     try {
 
-        const books = await locateBook();
+        const filters : any = req;
+        const books = await locateBook("", filters);
 
-        if (!books) {
+        if (books.length === 0) {
             return {status: 404, message: "No books found."};
         }
         
