@@ -4,28 +4,17 @@ import Book, { IBook } from "../models/Book.js";
 import ResponseType from "../types/response.type.js";
 
 
-const locateBook = async(id: string = "") : Promise<IBook | null | IBook[]> => {
-    try {
-
-        if (!id) {
-            const books = await Book.find();
-            return books;
-        }
-        if (!Types.ObjectId.isValid(id)) {
-            return null;
-        }
-
+const locateBook = async(id?: string, filters: any = {}) : Promise<IBook[]> => {
+    
+    if (id) {
         const book = await Book.findById(id);
-        return book;
-
-    } catch (error: any) {
-
-        console.error("locateBookById error:", error);
-        return null;
+        return book ? [book] : [];
     }
+    return await Book.find(filters);
+
 }
 
-export const createBookService = async (data: IBook) : Promise<ResponseType> => {
+export const createBookService = async (data: IBook, userId: string) : Promise<ResponseType> => {
 
     try{
     
@@ -42,7 +31,8 @@ export const createBookService = async (data: IBook) : Promise<ResponseType> => 
             title: data.title,
             author: data.author, 
             description: data.description || data.title, // if case of empty description
-            genre: genres
+            genre: genres,
+            userId: userId, 
 
         })
 
@@ -57,13 +47,26 @@ export const createBookService = async (data: IBook) : Promise<ResponseType> => 
     }
 }
 
-export const listBooksService = async() : Promise<ResponseType> => {
+export const listBooksService = async(req: any) : Promise<ResponseType> => {
     
     try {
 
-        const books = await locateBook();
+        const { query, user }  = req;
 
-        if (!books) {
+        if (!user || !user.id) {
+            console.log("User not connected.");
+            return { status: 401, message: "Unauthorized" };
+        }
+
+        const filters : any = { userId: user.id }
+
+        if (query.title) filters.title = { $regex: query.title, $options: "i" };
+        if (query.author) filters.author = { $regex: query.author, $options: "i" };
+        if (query.genre) filters.genre = { $regex: `^${query.genre}$`, $options: "i" };
+
+        const books = await locateBook(undefined, filters);
+
+        if (books.length === 0) {
             return {status: 404, message: "No books found."};
         }
         
