@@ -14,7 +14,7 @@ const locateBook = async(id?: string, filters: any = {}) : Promise<IBook[]> => {
 
 }
 
-export const createBookService = async (data: IBook) : Promise<ResponseType> => {
+export const createBookService = async (data: IBook, userId: string) : Promise<ResponseType> => {
 
     try{
     
@@ -31,7 +31,8 @@ export const createBookService = async (data: IBook) : Promise<ResponseType> => 
             title: data.title,
             author: data.author, 
             description: data.description || data.title, // if case of empty description
-            genre: genres
+            genre: genres,
+            userId: userId, 
 
         })
 
@@ -50,8 +51,20 @@ export const listBooksService = async(req: any) : Promise<ResponseType> => {
     
     try {
 
-        const filters : any = req;
-        const books = await locateBook("", filters);
+        const { query, user }  = req;
+
+        if (!user || !user.id) {
+            console.log("User not connected.");
+            return { status: 401, message: "Unauthorized" };
+        }
+
+        const filters : any = { userId: user.id }
+
+        if (query.title) filters.title = { $regex: query.title, $options: "i" };
+        if (query.author) filters.author = { $regex: query.author, $options: "i" };
+        if (query.genre) filters.genre = { $regex: `^${query.genre}$`, $options: "i" };
+
+        const books = await locateBook(undefined, filters);
 
         if (books.length === 0) {
             return {status: 404, message: "No books found."};
