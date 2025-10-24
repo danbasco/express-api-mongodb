@@ -22,16 +22,28 @@ export const listBooks = async(req: Request , res: Response) => {
 
 export const listBookById = async(req: Request, res: Response) => {
 
+    const book = await bookService.listBookByIdService({  id: req.params.id, user: req.user });
+    return res.status(book.status).json({ message: book.message, data: book.data });
+
 }
 
 export const updateBook = async(req: Request, res: Response) => {
+
+    const book = await bookService.updateBookService({  id: req.params.id , user: req.user }, req.body);
+    return res.status(book.status).json({ message: book.message, data: book.data });
 
 }
 
 export const patchBook = async(req: Request, res: Response) => {
 
+    const book = await bookService.patchBookService({ id: req.params.id, user: req.user }, req.body);
+    return res.status(book.status).json({ message: book.message, data: book.data });
+
 }
 
 export const deleteBook = async(req: Request, res: Response) => {
+
+    const book = await bookService.deleteBookService(req.params.id);
+    return res.status(book.status).json({ message: book.message, data: book.data });
 
 }

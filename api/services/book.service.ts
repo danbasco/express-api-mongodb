@@ -1,12 +1,17 @@
-import { Types } from "mongoose";
+import { Types, Document, } from "mongoose";
 import Book, { IBook } from "../models/Book.js";
 
 import ResponseType from "../types/response.type.js";
 
 
-const locateBook = async(id?: string, filters: any = {}) : Promise<IBook[]> => {
+const locateBook = async(id?: string, filters: any = {}) : Promise<(IBook & Document)[]> => {
     
     if (id) {
+
+        if (!Types.ObjectId.isValid(id)) {
+            return [];
+        }
+
         const book = await Book.findById(id);
         return book ? [book] : [];
     }
@@ -14,13 +19,34 @@ const locateBook = async(id?: string, filters: any = {}) : Promise<IBook[]> => {
 
 }
 
+
+class MissingParamsError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "MissingParamsError";
+    }
+}
+
+const validateParams = async (data: IBook) : Promise<any> => {
+    const missingFields: string[] = [];
+
+    if (!data.title) missingFields.push("Title");
+    if (!data.author) missingFields.push("Author");
+    if (!data.genre || data.genre.length === 0) missingFields.push("Genre");
+
+    if (missingFields.length > 0) {
+        throw new MissingParamsError(
+        `The following required fields are missing or empty: ${missingFields.join(", ")}.`
+        );
+    }
+}
+
+
 export const createBookService = async (data: IBook, userId: string) : Promise<ResponseType> => {
 
     try{
     
-        if(!data || !data.author || !data.genre || !data.title) {
-            return {status: 400, message: "Must give Author, Genre and Title of the book."};
-        }
+        await validateParams(data);
         
         const genres = Array.isArray(data.genre)
           ? data.genre.map(g => String(g).trim())
@@ -53,11 +79,6 @@ export const listBooksService = async(req: any) : Promise<ResponseType> => {
 
         const { query, user }  = req;
 
-        if (!user || !user.id) {
-            console.log("User not connected.");
-            return { status: 401, message: "Unauthorized" };
-        }
-
         const filters : any = { userId: user.id }
 
         if (query.title) filters.title = { $regex: query.title, $options: "i" };
@@ -78,4 +99,64 @@ export const listBooksService = async(req: any) : Promise<ResponseType> => {
         return {status: 500, message: "Internal Server Error.", data: error};
 
     }
+}
+
+export const listBookByIdService = async(req: {id: string, user: any}) : Promise<ResponseType> => {
+
+    try {
+
+        const { id, user } = req;
+        const filters : any = { userId: user.id };  
+
+        const books = await locateBook(id, filters);
+        if (books.length === 0) {
+            return {status: 404, message: "Book not found."};
+        }
+
+        return {status: 200, message: "Book retrieved successfully.", data: books[0]};
+
+    } catch (error: any) {
+        console.error("listBookByIdService error:", error);
+        return {status: 500, message: "Internal Server Error.", data: error};
+    }
+
+}
+
+export const updateBookService = async(req: {id: string, user: any}, data: IBook) : Promise<ResponseType> => {
+    
+    try {
+
+        const { id, user } = req;
+        const filters : any = { userId: user.id };  
+
+        const book = await locateBook(id, filters);
+        if (book.length === 0) {
+            return {status: 404, message: "Book not found."};
+        }
+
+        await validateParams(data);
+
+        Object.assign(book[0], data);
+        await book[0].save();
+
+        return {status: 200, message: "Book updated successfully.", data: book[0]};
+    } catch (error: any) {
+
+        if(error instanceof MissingParamsError) {
+            return {status: 400, message: error.message};
+        }
+
+        console.error("updateBookService error:", error);
+        return {status: 500, message: "Internal Server Error.", data: error};
+    }
+}
+
+export const patchBookService = async(req: {id: string, user: any}, data: Partial<IBook>) : Promise<ResponseType> => {
+    // To be implemented
+    return {status: 501, message: "Not Implemented."};
+}
+
+export const deleteBookService = async(id: string) : Promise<ResponseType> => {
+    // To be implemented
+    return {status: 501, message: "Not Implemented."};
 }
