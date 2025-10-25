@@ -1,12 +1,14 @@
 import mongoose, { Schema, Model, model, Types } from "mongoose";
 import { GENRES, Genre } from "../types/genres.type.js";
+import { STATUS, Status } from "../types/status.type.js";
 
 
 export interface IBook {
     "title": string,
     "author": string,
     "description": string,
-    "genre": string[],
+    "genre": Genre[],
+    "status": Status,
     "userId": Types.ObjectId
 }
 
@@ -31,6 +33,11 @@ const BookSchema : Schema<IBook> = new Schema({
         enum: GENRES,
         required: true
     },
+    status: {
+        type: String,
+        enum: STATUS,
+        required: true
+    },
     userId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -43,3 +50,4 @@ const Book : Model<IBook> = mongoose.models.Book || model<IBook>("Book", BookSch
 
 export default Book;
 export type { Genre };
+export type { Status };
