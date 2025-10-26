@@ -2,9 +2,6 @@ import { Types, Document} from "mongoose";
 import Book, { IBook } from "../models/Book.js";
 
 import ResponseType from "../types/response.type.js";
-import { MissingParamsError, InvalidEnumError } from "../utils/errors.js";
-import { STATUS } from "../types/status.type.js";
-import { GENRES } from "../types/genres.type.js";
 import { normalizeGenres, validateParams, validatePatchParams } from "../utils/validators.js";
 
 const locateBook = async(id?: string, filters: any = {}) : Promise<(IBook & Document)[]> => {
@@ -15,7 +12,7 @@ const locateBook = async(id?: string, filters: any = {}) : Promise<(IBook & Docu
             return [];
         }
 
-        const book = await Book.findById(id);
+        const book = await Book.findOne({ _id: id, ...filters });
         return book ? [book] : [];
     }
     return await Book.find(filters);
