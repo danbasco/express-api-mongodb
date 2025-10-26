@@ -1,16 +1,11 @@
 info:
   name: MongoDB-Express API
-  _postman_id: 8b5c3d41-9d3a-48b7-a4b1-3b123456abcd
   schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
-
 variable:
   - key: baseUrl
-    value: http://atv-parte1-fullstack.danielvasconcelos.me/
+    value: 'http://atv-parte1-fullstack.danielvasconcelos.me/'
   - key: token
-    value: ""
-  - key: bookId
-    value: ""
-
+    value: ''
 item:
   - name: Cadastro
     item:
@@ -28,9 +23,16 @@ item:
                 "email": "daniel123@email.com",
                 "password": "Daniel123!"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/register"
-
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
       - name: Erro: Senha Invalida
         request:
           method: POST
@@ -45,9 +47,16 @@ item:
                 "email": "daniel123@email.com",
                 "password": "123"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/register"
-
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
       - name: Erro: Email repetido
         request:
           method: POST
@@ -62,9 +71,16 @@ item:
                 "email": "daniel123@email.com",
                 "password": "Daniel123!"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/register"
-
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
       - name: Erro: Email invalido
         request:
           method: POST
@@ -79,9 +95,16 @@ item:
                 "email": "not-an-email",
                 "password": "Daniel123!"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/register"
-
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
       - name: Erro: Requisição mal formatada
         request:
           method: POST
@@ -94,8 +117,16 @@ item:
               {
                 "email": "missingname@example.com"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/register"
+            raw: "{{baseUrl}}/users/register"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - register
 
   - name: Login
     item:
@@ -112,9 +143,16 @@ item:
                 "email": "daniel123@email.com",
                 "password": "Daniel123!"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/login"
-
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
       - name: Erro: Senha invalida
         request:
           method: POST
@@ -128,9 +166,16 @@ item:
                 "email": "daniel123@email.com",
                 "password": "wrongpassword"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/login"
-
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
       - name: Erro: Email Invalido
         request:
           method: POST
@@ -144,9 +189,16 @@ item:
                 "email": "not-an-email",
                 "password": "somepassword"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/login"
-
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
       - name: Erro: Requisição mal formatada
         request:
           method: POST
@@ -159,8 +211,16 @@ item:
               {
                 "password": "noemailprovided"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{{baseUrl}}users/login"
+            raw: "{{baseUrl}}/users/login"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - users
+              - login
 
   - name: Protected
     item:
@@ -173,8 +233,11 @@ item:
             - key: Accept
               value: application/json
           url:
-            raw: "{{baseUrl}}protected"
-
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
       - name: Acesso Sem Token
         request:
           method: GET
@@ -182,8 +245,11 @@ item:
             - key: Accept
               value: application/json
           url:
-            raw: "{{baseUrl}}protected"
-
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
       - name: Token Invalido
         request:
           method: GET
@@ -193,27 +259,199 @@ item:
             - key: Accept
               value: application/json
           url:
-            raw: "{{baseUrl}}protected"
-
-  - name: Books
+            raw: "{{baseUrl}}/protected"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - protected
+  - name: Livros
     item:
-      - name: Criar Livro Bem Sucedido
+      - name: Listar Livros
+        request:
+          method: GET
+          header:
+            - key: Accept
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+      - name: Adicionar Livro
         request:
           method: POST
           header:
-            - key: Authorization
-              value: "Bearer {{token}}"
             - key: Content-Type
               value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
           body:
             mode: raw
             raw: |
               {
-                "title": "Crime e Castigo",
-                "author": "Fyodor Dostoevsky",
-                "description": "A psychological drama about morality and redemption.",
-                "genre": ["Romance", "Fiction"],
+                "title": "New Book Title",
+                "author": "Author Name",
+                "description": "A brief description of the book.",
+                "genre": ["Fiction"],
                 "status": "READING"
               }
+            options:
+              raw:
+                language: json
           url:
-            raw: "{
+            raw: "{{baseUrl}}/books"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+      - name: Adicionar Livro com Dados Incompletos
+        request:
+          method: POST
+          header:
+            - key: Content-Type
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          body:
+            mode: raw
+            raw: |
+              {
+                "title": "Incomplete Book"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/books"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+      - name: Deletar Livro
+        request:
+          method: DELETE
+          header:
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books/{{bookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{bookId}}"
+      - name: Filtrar Livros por status
+        request:
+          method: GET
+          header:
+            - key: Accept
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books?status=READING"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+            query:
+              - key: status
+                value: READING
+      - name: Buscar Livro por ID
+        request:
+          method: GET
+          header:
+            - key: Accept
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books/{{bookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{bookId}}"
+      - name: Erro: Livro de outro usuário
+        request:
+          method: GET
+          header:
+            - key: Accept
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books/{{otherUserBookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{otherUserBookId}}"
+      - name: Atualizar Livro
+        request:
+          method: PUT
+          header:
+            - key: Content-Type
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          body:
+            mode: raw
+            raw: |
+              {
+                "title": "Updated Book Title",
+                "author": "Updated Author Name",
+                "description": "An updated brief description of the book.",
+                "genre": ["Non-Fiction"],
+                "status": "COMPLETED"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/books/{{bookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{bookId}}"
+      - name: Atualizar Livro com Dados Incompletos
+        request:
+          method: PATCH
+          header:
+            - key: Content-Type
+              value: application/json
+            - key: Authorization
+              value: "Bearer {{token}}"
+          body:
+            mode: raw
+            raw: |
+              {
+                "status": "DROPPED"
+              }
+            options:
+              raw:
+                language: json
+          url:
+            raw: "{{baseUrl}}/books/{{bookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{bookId}}"
+      - name: Deletar Livro
+        request:
+          method: DELETE
+          header:
+            - key: Authorization
+              value: "Bearer {{token}}"
+          url:
+            raw: "{{baseUrl}}/books/{{bookId}}"
+            host:
+              - "{{baseUrl}}"
+            path:
+              - books
+              - "{{bookId}}"
