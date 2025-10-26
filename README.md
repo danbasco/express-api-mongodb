@@ -138,6 +138,38 @@ Vercel will automatically detect the entry point (`api/index.ts`) and deploy it 
 
 ---
 
+# CRUD
+
+The Books feature provides a personal reading-list resource scoped to authenticated users.
+
+## Overview
+Users can create and manage their personal library to track reading progress and organize books.
+
+## Key features
+- Create, read, update (PUT/PATCH) and delete books.
+- Track reading status (e.g. "reading", "finished", "on list").
+- Store metadata: title, author, description, genres, status.
+- All records are scoped to the authenticated user.
+
+## Endpoints (summary)
+- POST /books — create a book
+- GET /books — list books (supports filtering and searching)
+- GET /books/:id — retrieve a single book (user-scoped)
+- PUT /books/:id — replace a book
+- PATCH /books/:id — partial update
+- DELETE /books/:id — remove a book
+
+## Filtering & Searching
+- Title and author: partial match, case-insensitive
+- Genre and status: exact match (case-insensitive)
+- Results always restricted to the requesting user's books
+
+## Notes
+- Validation enforced on create/update; PATCH accepts partial payloads.
+- Genres are normalized for consistent storage and filtering.
+
+
+
 ## Additional Information
 
 * TypeScript improves code maintainability and type safety.
@@ -149,6 +181,7 @@ Vercel will automatically detect the entry point (`api/index.ts`) and deploy it 
 ## Tutorial Video
 
 A complete walkthrough of the project API and usage is available here:
-[YouTube Tutorial](https://youtu.be/MPKciL0R5kQ)
+- [REGISTER/LOGIN](https://youtu.be/MPKciL0R5kQ)
+- [CRUD USAGE](https://youtu.be/JDByNXuoVxo)
 
 ---
