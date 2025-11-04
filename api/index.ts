@@ -5,11 +5,11 @@ import userRoute from "./routes/user.route.js";
 import protectedRoute from "./routes/protected.route.js";
 import bookRoute from "./routes/book.route.js";
 import { errorHandler } from "./middlewares/errors.middleware.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-const cors = require('cors');
 
 database.connect();
 
