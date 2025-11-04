@@ -9,9 +9,12 @@ import { errorHandler } from "./middlewares/errors.middleware.js";
 dotenv.config();
 
 const app = express();
+const cors = require('cors');
+
 database.connect();
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/auth", userRoute); // Authentication
 app.use("/protected", protectedRoute);
